@@ -5,10 +5,17 @@
     You can get the file by following
     <a href="https://www.facebook.com/help/212802592074644" target="_blank"
       >these instructions</a
-    >
-    <br /><br />
-    <input type="file" id="file" class="inputfile" @change="checkFile" />
-    <label for="file" class="input-file-button">Pick a file</label>
+    >. It may take a few days to generate. <br /><br />
+    <div v-if="!loading">
+      <input type="file" id="file" class="inputfile" @change="checkFile" />
+      <label for="file" class="input-file-button">Pick a file</label>
+    </div>
+    <div v-else>
+      Please wait while your data is processed... ({{
+        processedConversations
+      }}
+      / {{ totalConversations }})
+    </div>
   </div>
 </template>
 
@@ -21,11 +28,14 @@ export default defineComponent({
   name: "FileUpload",
   data() {
     return {
-      finished: false,
+      loading: false,
+      totalConversations: null,
+      processedConversations: null,
     };
   },
   methods: {
     async checkFile(e) {
+      this.loading = true;
       console.log("Starting import");
       const files = e.target.files;
 
@@ -48,6 +58,9 @@ export default defineComponent({
           f.filename.match(/messages\/inbox\/.*\/message_\d+\.json/g) !== null
       );
 
+      this.totalConversations = conversationFiles.length;
+      this.processedConversations = 0;
+
       var messages = await Promise.all(
         conversationFiles.map(async (f) => {
           const fileContent = await f.getData(new zip.TextWriter());
@@ -55,10 +68,11 @@ export default defineComponent({
           if (conversation.participants.length <= 1) {
             // These are DMs where you are unfriended with the person, or group chats where
             // everybody left. We choose to exclude them
+            this.processedConversations += 1;
             return [];
           }
           // TODO: this would be so much better with Typescript
-          return conversation.messages.map((message) => {
+          const result = conversation.messages.map((message) => {
             return {
               conversationName: conversation.title,
               conversationId: conversation.thread_path,
@@ -68,9 +82,12 @@ export default defineComponent({
               text: message.content,
             };
           });
+          this.processedConversations += 1;
+          return result;
         })
       );
       messages = messages.flat();
+      this.loading = false;
       this.$emit("uploaded", { messages: messages, myName: myName });
       console.log(
         "Imported file with ",
