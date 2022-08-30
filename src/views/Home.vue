@@ -1,18 +1,44 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <analytics
+      v-if="messages !== null && myName !== null"
+      :messages="messages"
+      :my-name="myName"
+    />
+    <file-upload v-else v-on:uploaded="handleUploadFinished" />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import FileUpload from "@/components/FileUpload.vue";
+import Analytics from "@/components/Analytics.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
-    HelloWorld,
+    FileUpload,
+    Analytics,
+  },
+  data() {
+    return {
+      messages: null,
+      myName: null,
+    };
+  },
+  methods: {
+    handleUploadFinished(event) {
+      this.messages = event.messages;
+      this.myName = event.myName;
+    },
   },
 });
 </script>
+
+<style scoped>
+.home {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
