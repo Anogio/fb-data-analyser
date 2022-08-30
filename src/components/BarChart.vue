@@ -42,20 +42,22 @@ export default {
     return {
       chartId: "bar-chart",
       datasetIdKey: "label",
-      width: 200,
-      height: 100,
+      width: 100,
+      height: 200,
       cssClasses: "",
       styles: {},
       plugins: [],
       chartOptions: {
         responsive: true,
+        indexAxis: "y",
+
         scales: {
           x: {
             display: true,
+            type: "logarithmic",
           },
           y: {
             display: true,
-            type: "logarithmic",
           },
         },
       },
