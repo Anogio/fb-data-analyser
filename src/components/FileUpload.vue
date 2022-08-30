@@ -5,9 +5,19 @@
     You can get the file by following
     <a href="https://www.facebook.com/help/212802592074644" target="_blank"
       >these instructions</a
-    >. It may take a few days to generate. <br /><br />
+    >. It may take a few days to generate.
+    <br />
+    NB: Facebook might propose multiple files for download. It's unclear to me
+    why this is, just pick the largest one.
+    <br /><br />
     <div v-if="!loading">
-      <input type="file" id="file" class="inputfile" @change="checkFile" />
+      <input
+        type="file"
+        id="file"
+        class="inputfile"
+        @change="checkFile"
+        accept=".zip"
+      />
       <label for="file" class="input-file-button">Pick a file</label>
     </div>
     <div v-else>
