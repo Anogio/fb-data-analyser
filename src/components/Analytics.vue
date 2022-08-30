@@ -46,7 +46,12 @@ export default defineComponent({
 
     this.conversationCountChartData = {
       labels: topNConversations.map((c) => c.conversation),
-      datasets: [{ data: topNConversations.map((c) => c.nMessages) }],
+      datasets: [
+        {
+          data: topNConversations.map((c) => c.nMessages),
+          label: "Number of messages (log scale)",
+        },
+      ],
     };
   },
 });

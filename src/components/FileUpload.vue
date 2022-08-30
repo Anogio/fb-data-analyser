@@ -15,6 +15,7 @@
 <script>
 import { defineComponent } from "vue";
 import * as zip from "@zip.js/zip.js";
+import * as iconv from "iconv-lite";
 
 export default defineComponent({
   name: "FileUpload",
@@ -39,7 +40,8 @@ export default defineComponent({
         f.filename.endsWith("profile_information.json")
       )[0];
       const myProfile = await profileFile.getData(new zip.TextWriter());
-      const myName = JSON.parse(myProfile).profile_v2.name.full_name;
+      const myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
+        .full_name;
 
       const conversationFiles = zipContent.filter(
         (f) =>
@@ -49,7 +51,7 @@ export default defineComponent({
       var messages = await Promise.all(
         conversationFiles.map(async (f) => {
           const fileContent = await f.getData(new zip.TextWriter());
-          const conversation = JSON.parse(fileContent);
+          const conversation = JSON.parse(this.fixEncoding(fileContent));
           if (conversation.participants.length <= 1) {
             // These are DMs where you are unfriended with the person, or group chats where
             // everybody left. We choose to exclude them
@@ -81,6 +83,12 @@ export default defineComponent({
     async getEntries(file, options) {
       return await new zip.ZipReader(new zip.BlobReader(file)).getEntries(
         options
+      );
+    },
+    fixEncoding(text) {
+      return iconv.decode(
+        iconv.encode(JSON.stringify(JSON.parse(text)), "ISO-8859-1"),
+        "utf8"
       );
     },
   },
