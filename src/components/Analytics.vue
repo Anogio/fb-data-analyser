@@ -17,15 +17,17 @@
       />
     </div>
     <br /><br />
-    <n-row>
+    <n-row
+      :style="{ border: '1px solid', padding: '10px', borderRadius: '20px' }"
+    >
       <n-col :span="8">
         <n-statistic label="Total messages" :value="filteredMessages.length" />
       </n-col>
       <n-col :span="8">
-        <n-statistic label="Received" :value="nbSentMessages" />
+        <n-statistic label="Sent" :value="nbSentMessages" />
       </n-col>
       <n-col :span="8">
-        <n-statistic label="Sent" :value="nbReceivedMessages" />
+        <n-statistic label="Received" :value="nbReceivedMessages" />
       </n-col>
     </n-row>
     <br /><br />
