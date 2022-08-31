@@ -1,6 +1,17 @@
 <template>
-  <div>
-    TODO: some explanation about the project
+  <div :style="{ width: '50%' }">
+    <h1>Hi!</h1>
+    <div>
+      This page is designed to give you some
+      <b>analytics about you Facebook Messenger</b> conversation data.
+      <br />
+      It
+      <b>does not send any data through the network</b>: everything happens on
+      your computer.
+      <br />
+      You don't have to trust me, feel free to disconnect from the internet
+      before uploading your data ;)
+    </div>
     <br />
     You can get the file by following
     <a href="https://www.facebook.com/help/212802592074644" target="_blank"
@@ -18,13 +29,15 @@
         @change="checkFile"
         accept=".zip"
       />
-      <label for="file" class="input-file-button">Pick a file</label>
+      <label for="file" class="input-file-button"><b>Pick a file</b></label>
     </div>
     <div v-else>
-      Please wait while your data is processed... ({{
-        processedConversations
-      }}
-      / {{ totalConversations }})
+      <b
+        >Please wait while your data is processed... ({{
+          processedConversations
+        }}
+        / {{ totalConversations }} conversations processed)</b
+      >
     </div>
   </div>
 </template>
@@ -128,8 +141,12 @@ export default defineComponent({
 }
 .input-file-button {
   border: 1px solid #ccc;
+  border-radius: 10px;
   display: block;
   padding: 6px 12px;
   cursor: pointer;
+  background-color: lightGreen;
+  width: 300px;
+  text-align: center;
 }
 </style>

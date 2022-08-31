@@ -1,5 +1,6 @@
 <template>
   <Bar
+    v-if="displayGraph"
     :chart-options="chartOptions"
     :chart-data="chartData"
     :chart-id="chartId"
@@ -40,6 +41,8 @@ export default {
   components: { Bar },
   data() {
     return {
+      height: null,
+      displayGraph: true,
       chartId: "bar-chart",
       datasetIdKey: "label",
       width: 100,
@@ -76,11 +79,19 @@ export default {
       required: true,
     },
   },
-  computed: {
-    height() {
-      // This is a voodoo formula I determined through experimentation
-      // It is not very robus to various screen widths
-      return Math.floor(5 * this.chartData.datasets[0].data.length + 14);
+  watch: {
+    chartData: {
+      immediate: true,
+      handler(newValue) {
+        // This is a voodoo formula I determined through experimentation
+        // It is not very robust to various screen widths
+        this.displayGraph = false;
+        this.height = Math.floor(5 * newValue.datasets[0].data.length + 1);
+        // Force the component to re-render to avoid reactivity / sizing issues
+        this.$nextTick(() => {
+          this.displayGraph = true;
+        });
+      },
     },
   },
 };

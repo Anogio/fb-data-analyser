@@ -1,12 +1,20 @@
 <template>
   <div>
-    Your insights here
+    <h1>Data Analysis</h1>
     <br />
-    Name: {{ myName }} <br />
-
+    Your name: <b>{{ myName }}</b> <br />
+    <br />
     <div>
-      You can pick a time range to filter messages:
-      <n-date-picker v-model:value="range" type="daterange" clearable />
+      <h3>
+        You can pick a time range to filter messages (by default, all messages
+        are shown):
+      </h3>
+      <n-date-picker
+        v-model:value="range"
+        type="daterange"
+        clearable
+        :style="{ width: '25%' }"
+      />
     </div>
 
     Messages: {{ filteredMessages.length }} <br /><br />
