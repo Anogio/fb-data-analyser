@@ -3,17 +3,26 @@
     Your insights here
     <br />
     Name: {{ myName }} <br />
-    Messages: {{ messages.length }} <br /><br />
 
     <div>
       You can pick a time range to filter messages:
       <n-date-picker v-model:value="range" type="daterange" clearable />
     </div>
 
-    <BarChart
-      v-if="conversationCountChartData"
-      :chartData="conversationCountChartData"
-    />
+    Messages: {{ filteredMessages.length }} <br /><br />
+
+    <div>
+      <BarChart
+        v-if="conversationCountGroupChartData"
+        :chartData="conversationCountGroupChartData"
+        class="count-by-conv-chart"
+      />
+      <BarChart
+        v-if="conversationCountDMChartData"
+        :chartData="conversationCountDMChartData"
+        class="count-by-conv-chart"
+      />
+    </div>
   </div>
 </template>
 
@@ -29,39 +38,71 @@ export default defineComponent({
   props: ["messages", "myName"],
   data() {
     return {
-      topN: 100,
       range: null,
     };
   },
   computed: {
-    conversationCountChartData() {
-      var filteredMessages = this.messages;
+    filteredMessages() {
       if (this.range !== null) {
-        filteredMessages = filteredMessages.filter(
+        return this.messages.filter(
           (m) => m.timestamp > this.range[0] && m.timestamp < this.range[1]
         );
       }
+      return this.messages;
+    },
+    conversationsSummary() {
       const messageCounts = d3.rollup(
-        filteredMessages,
-        (g) => g.length,
+        this.filteredMessages,
+        (group) => {
+          const myMessages = group.filter(
+            (message) => message.sender === this.myName
+          );
+          return {
+            total: group.length,
+            sentMessages: myMessages.length,
+            receivedMessages: group.length - myMessages.length,
+            conversationType: group[0].conversationType,
+          };
+        },
         (m) => m.conversationName
       );
 
       const data = [];
       messageCounts.forEach((value, key) => {
-        data.push({ conversation: key, nMessages: value });
+        data.push({ conversation: key, summary: value });
       });
       data.sort((a, b) => {
-        return b.nMessages - a.nMessages;
+        return b.summary.total - a.summary.total;
       });
-      const topNConversations = data.slice(0, this.topN);
-
+      return data;
+    },
+    conversationCountGroupChartData() {
+      const data = this.conversationsSummary.filter(
+        (c) => c.summary.conversationType === "RegularGroup"
+      );
       return {
-        labels: topNConversations.map((c) => c.conversation),
+        labels: data.map((c) => c.conversation),
         datasets: [
           {
-            data: topNConversations.map((c) => c.nMessages),
-            label: "Number of messages (log scale)",
+            data: data.map((c) => c.summary.total),
+            label: "Exchanged messages",
+            backgroundColor: "lightGreen",
+            barThickness: 20,
+          },
+        ],
+      };
+    },
+    conversationCountDMChartData() {
+      const data = this.conversationsSummary.filter(
+        (c) => c.summary.conversationType === "Regular"
+      );
+      return {
+        labels: data.map((c) => c.conversation),
+        datasets: [
+          {
+            data: data.map((c) => c.summary.total),
+            label: "Exchanged messages",
+            backgroundColor: "lightGreen",
             barThickness: 20,
           },
         ],
@@ -70,3 +111,11 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.count-by-conv-chart {
+  width: 48%;
+  height: 600px;
+  overflow-y: auto;
+  display: inline-block;
+}
+</style>
