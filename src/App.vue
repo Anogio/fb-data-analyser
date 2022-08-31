@@ -9,6 +9,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  width: 80%;
+  height: 80%;
+  margin: auto;
 }
 
 #nav {

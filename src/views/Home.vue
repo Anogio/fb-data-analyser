@@ -34,11 +34,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.home {
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-}
-</style>
