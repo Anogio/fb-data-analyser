@@ -16,8 +16,19 @@
         :style="{ width: '25%' }"
       />
     </div>
-
-    Messages: {{ filteredMessages.length }} <br /><br />
+    <br /><br />
+    <n-row>
+      <n-col :span="8">
+        <n-statistic label="Total messages" :value="filteredMessages.length" />
+      </n-col>
+      <n-col :span="8">
+        <n-statistic label="Received" :value="nbSentMessages" />
+      </n-col>
+      <n-col :span="8">
+        <n-statistic label="Sent" :value="nbReceivedMessages" />
+      </n-col>
+    </n-row>
+    <br /><br />
 
     <div>
       <BarChart
@@ -57,6 +68,13 @@ export default defineComponent({
         );
       }
       return this.messages;
+    },
+    nbSentMessages() {
+      return this.filteredMessages.filter((m) => m.sender === this.myName)
+        .length;
+    },
+    nbReceivedMessages() {
+      return this.filteredMessages.length - this.nbSentMessages;
     },
     conversationsSummary() {
       const messageCounts = d3.rollup(

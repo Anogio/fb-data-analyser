@@ -1,5 +1,5 @@
 <template>
-  <div :style="{ width: '50%' }">
+  <div :style="{ width: '75%' }">
     <h1>Hi!</h1>
     <div>
       This page is designed to give you some
