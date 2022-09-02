@@ -86,7 +86,7 @@ export default {
         // This is a voodoo formula I determined through experimentation
         // It is not very robust to various screen widths
         this.displayGraph = false;
-        this.height = Math.floor(5 * newValue.datasets[0].data.length + 1);
+        this.height = Math.floor(5 * newValue.datasets[0].data.length + 15);
         // Force the component to re-render to avoid reactivity / sizing issues
         this.$nextTick(() => {
           this.displayGraph = true;

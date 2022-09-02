@@ -5,6 +5,45 @@
     Your name: <b>{{ myName }}</b> <br />
     <br />
     <div>
+      <div>
+        <n-button @click="animation(true)" :disabled="animationInterval">{{
+          animationPaused ? "Restart animation" : "Animate !"
+        }}</n-button>
+        <n-button
+          @click="
+            stopAnimation();
+            animationPaused = true;
+          "
+          :disabled="!animationInterval"
+          >Pause animation</n-button
+        >
+        <n-button
+          @click="
+            animation(false);
+            animationPaused = false;
+          "
+          :disabled="!animationPaused"
+          >Resume animation</n-button
+        >
+      </div>
+      <div>
+        <br />
+        <n-progress
+          v-if="animationInterval || animationPaused"
+          type="line"
+          :percentage="
+            Math.min(
+              Math.ceil(
+                ((this.range[1] - this.minTimestamp) /
+                  (this.maxTimestamp - minTimestamp)) *
+                  100
+              ),
+              100
+            )
+          "
+          indicator-placement="inside"
+        />
+      </div>
       <h3>
         You can pick a time range to filter messages (by default, all messages
         are shown):
@@ -13,7 +52,7 @@
         v-model:value="range"
         type="daterange"
         clearable
-        :style="{ width: '25%' }"
+        :style="{ width: '250px' }"
       />
     </div>
     <br /><br />
@@ -56,20 +95,86 @@ import BarChart from "./BarChart.vue";
 export default defineComponent({
   name: "Analytics",
   components: { BarChart },
-  props: ["messages", "myName"],
+  props: ["sortedMessages", "myName"],
   data() {
     return {
       range: null,
+      animationInterval: null,
+      animationPaused: false,
     };
+  },
+  methods: {
+    stopAnimation() {
+      clearInterval(this.animationInterval);
+      this.animationInterval = null;
+    },
+    animation(restart) {
+      this.animationPaused = false;
+      if (this.animationInterval) {
+        clearInterval(this.animationInterval);
+      }
+
+      if (this.minTimestamp === null || this.maxTimestamp == null) {
+        console.log("No dates");
+        return;
+      }
+      console.log(this.minTimestamp, this.maxTimestamp);
+      const oneMonth = 1000 * 60 * 60 * 24 * 31; // ms -> s -> m -> h -> d -> mo
+      if (restart) {
+        this.range = [this.minTimestamp, this.minTimestamp + oneMonth];
+      }
+      console.log(this.range);
+      this.animationInterval = setInterval(() => {
+        this.range = [this.range[1], this.range[1] + oneMonth];
+        if (this.range[1] > Math.min(this.maxTimestamp, Date.now())) {
+          this.stopAnimation();
+        }
+      }, 2000);
+    },
+    firstMessagePositionAfterTimestamp(sortedMessagesArray, timestamp) {
+      let start = 0,
+        end = sortedMessagesArray.length - 1;
+      let ans = -1;
+
+      while (start <= end) {
+        let mid = parseInt((start + end) / 2, 10);
+        // Move to right side if target is
+        // greater.
+        if (sortedMessagesArray[mid].timestamp < timestamp) {
+          start = mid + 1;
+        }
+        // Move left side.
+        else {
+          ans = mid;
+          end = mid - 1;
+        }
+      }
+      return ans == -1 ? sortedMessagesArray.length : ans;
+    },
   },
   computed: {
     filteredMessages() {
       if (this.range !== null) {
-        return this.messages.filter(
-          (m) => m.timestamp > this.range[0] && m.timestamp < this.range[1]
+        const startMessagePosition = this.firstMessagePositionAfterTimestamp(
+          this.sortedMessages,
+          this.range[0]
+        );
+        const endMessagePosition = this.firstMessagePositionAfterTimestamp(
+          this.sortedMessages,
+          this.range[1]
+        );
+        return this.sortedMessages.slice(
+          startMessagePosition,
+          endMessagePosition
         );
       }
-      return this.messages;
+      return this.sortedMessages;
+    },
+    minTimestamp() {
+      return this.sortedMessages[0].timestamp;
+    },
+    maxTimestamp() {
+      return this.sortedMessages[this.sortedMessages.length - 1].timestamp;
     },
     nbSentMessages() {
       return this.filteredMessages.filter((m) => m.sender === this.myName)

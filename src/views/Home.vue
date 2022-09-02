@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <analytics
-      v-if="messages !== null && myName !== null"
-      :messages="messages"
+      v-if="sortedMessages !== null && myName !== null"
+      :sortedMessages="sortedMessages"
       :my-name="myName"
     />
     <file-upload v-else v-on:uploaded="handleUploadFinished" />
@@ -22,13 +22,13 @@ export default defineComponent({
   },
   data() {
     return {
-      messages: null,
+      sortedMessages: null,
       myName: null,
     };
   },
   methods: {
     handleUploadFinished(event) {
-      this.messages = event.messages;
+      this.sortedMessages = event.sortedMessages;
       this.myName = event.myName;
     },
   },

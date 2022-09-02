@@ -110,8 +110,9 @@ export default defineComponent({
         })
       );
       messages = messages.flat();
+      messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
       this.loading = false;
-      this.$emit("uploaded", { messages: messages, myName: myName });
+      this.$emit("uploaded", { sortedMessages: messages, myName: myName });
       console.log(
         "Imported file with ",
         messages.length,
