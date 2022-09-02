@@ -50,6 +50,9 @@ export default {
       styles: {},
       plugins: [],
       chartOptions: {
+        animation: {
+          duration: 0,
+        },
         responsive: true,
         indexAxis: "y",
         plugins: {
@@ -66,9 +69,16 @@ export default {
             display: true,
             type: "logarithmic",
             position: "top",
+            ticks: {
+              maxRotation: 0,
+              minRotation: 0,
+            },
           },
           y: {
             display: true,
+            ticks: {
+              autoSkip: false,
+            },
           },
         },
       },

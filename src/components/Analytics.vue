@@ -55,7 +55,7 @@
         :style="{ width: '250px' }"
       />
     </div>
-    <br /><br />
+    <br />
     <n-row
       :style="{ border: '1px solid', padding: '10px', borderRadius: '20px' }"
     >
@@ -69,8 +69,7 @@
         <n-statistic label="Received" :value="nbReceivedMessages" />
       </n-col>
     </n-row>
-    <br /><br />
-
+    <br />
     <div>
       <BarChart
         v-if="conversationCountGroupChartData"
@@ -129,7 +128,7 @@ export default defineComponent({
         if (this.range[1] > Math.min(this.maxTimestamp, Date.now())) {
           this.stopAnimation();
         }
-      }, 2000);
+      }, 1000);
     },
     firstMessagePositionAfterTimestamp(sortedMessagesArray, timestamp) {
       let start = 0,
@@ -248,7 +247,7 @@ export default defineComponent({
 .count-by-conv-chart {
   width: 48%;
   height: 600px;
-  overflow-y: auto;
+  overflow: auto;
   display: inline-block;
 }
 </style>
