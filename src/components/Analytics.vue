@@ -71,14 +71,20 @@
     </n-row>
     <br />
     <div>
-      <BarChart
-        v-if="conversationCountGroupChartData"
-        :chartData="conversationCountGroupChartData"
-        class="count-by-conv-chart"
-      />
+      <n-switch v-model:value="logScale" /> Logarithmic scale
+      <br />
       <BarChart
         v-if="conversationCountDMChartData"
         :chartData="conversationCountDMChartData"
+        :logScale="logScale"
+        title="Exchanged messages - direct messaging"
+        class="count-by-conv-chart"
+      />
+      <BarChart
+        v-if="conversationCountGroupChartData"
+        :chartData="conversationCountGroupChartData"
+        :logScale="logScale"
+        title="Exchanged messages - group chats"
         class="count-by-conv-chart"
       />
     </div>
@@ -100,6 +106,7 @@ export default defineComponent({
       range: null,
       animationInterval: null,
       animationPaused: false,
+      logScale: true,
     };
   },
   methods: {
@@ -217,7 +224,7 @@ export default defineComponent({
         datasets: [
           {
             data: data.map((c) => c.summary.total),
-            label: "Exchanged messages",
+            label: "Exchanged messages (log scale)",
             backgroundColor: "lightGreen",
             barThickness: 20,
           },
@@ -233,7 +240,7 @@ export default defineComponent({
         datasets: [
           {
             data: data.map((c) => c.summary.total),
-            label: "Exchanged messages",
+            label: "Exchanged messages (log scale)",
             backgroundColor: "lightGreen",
             barThickness: 20,
           },

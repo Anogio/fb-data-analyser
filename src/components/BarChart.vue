@@ -49,7 +49,22 @@ export default {
       cssClasses: "",
       styles: {},
       plugins: [],
-      chartOptions: {
+    };
+  },
+  props: {
+    chartData: {
+      required: true,
+    },
+    logScale: {
+      required: true,
+    },
+    title: {
+      required: true,
+    },
+  },
+  computed: {
+    chartOptions() {
+      return {
         animation: {
           duration: 0,
         },
@@ -58,7 +73,7 @@ export default {
         plugins: {
           title: {
             display: true,
-            text: "Exchanged messages by conversation (log scale)",
+            text: this.title,
           },
           legend: {
             display: false,
@@ -67,7 +82,7 @@ export default {
         scales: {
           x: {
             display: true,
-            type: "logarithmic",
+            type: this.logScale ? "logarithmic" : "linear",
             position: "top",
             ticks: {
               maxRotation: 0,
@@ -81,12 +96,7 @@ export default {
             },
           },
         },
-      },
-    };
-  },
-  props: {
-    chartData: {
-      required: true,
+      };
     },
   },
   watch: {
