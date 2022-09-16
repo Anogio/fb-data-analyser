@@ -6,7 +6,7 @@
     <br />
     <div>
       <div>
-        <n-button @click="animation(true)" :disabled="animationInterval">{{
+        <n-button @click="animation(true)" :disabled="!!animationInterval">{{
           animationPaused ? "Restart animation" : "Animate !"
         }}</n-button>
         <n-button
@@ -29,7 +29,7 @@
       <div>
         <br />
         <n-progress
-          v-if="animationInterval || animationPaused"
+          v-if="!!animationInterval || animationPaused"
           type="line"
           :percentage="
             Math.min(
