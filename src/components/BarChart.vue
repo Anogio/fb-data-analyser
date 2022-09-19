@@ -61,6 +61,9 @@ export default {
     title: {
       required: true,
     },
+    conversationIds: {
+      required: false,
+    },
   },
   computed: {
     chartOptions() {
@@ -88,6 +91,7 @@ export default {
               maxRotation: 0,
               minRotation: 0,
             },
+            min: this.logScale ? 0.6 : 1,
           },
           y: {
             display: true,
@@ -95,6 +99,12 @@ export default {
               autoSkip: false,
             },
           },
+        },
+        onClick: (_event, clickedElements) => {
+          if (this.conversationIds) {
+            const convId = this.conversationIds[clickedElements[0].index];
+            this.$router.push(`/conversation/${convId}`);
+          }
         },
       };
     },
