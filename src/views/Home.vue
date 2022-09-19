@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <analytics
-      v-if="sortedMessages !== null && myName !== null"
+      v-if="sortedMessages !== null"
       :sortedMessages="sortedMessages"
       :my-name="myName"
     />

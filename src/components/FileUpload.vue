@@ -72,14 +72,12 @@ export default defineComponent({
       const profileFiles = zipContent.filter((f) =>
         f.filename.endsWith("profile_information.json")
       );
-      let myName;
+      let myName = null;
       if (profileFiles.length > 0) {
         const profileFile = profileFiles[0];
         const myProfile = await profileFile.getData(new zip.TextWriter());
         myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
           .full_name;
-      } else {
-        myName = "me";
       }
 
       const conversationFiles = zipContent.filter(

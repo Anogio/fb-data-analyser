@@ -1,8 +1,10 @@
 <template>
   <div>
     <h1>Data Analysis</h1>
-    <br />
-    Your name: <b>{{ myName }}</b> <br />
+    <span v-if="myName"
+      ><br />
+      Your name: <b>{{ myName }}</b> <br
+    /></span>
     <br />
     <div>
       <div>
