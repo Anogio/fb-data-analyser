@@ -115,13 +115,30 @@ export default defineComponent({
       );
       messages = messages.flat();
       messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
+
+      let names = null;
+      if (myName === null) {
+        names = new Map();
+        messages.forEach((m) =>
+          names.set(m.sender, (names.get(m.sender) || 0) + 1)
+        );
+        names = Array.from(names.entries()).sort((a, b) => b[1] - a[1]);
+        names = names.map((e) => e[0]);
+      }
+
       this.loading = false;
-      this.$emit("uploaded", { sortedMessages: messages, myName: myName });
+      this.$emit("uploaded", {
+        sortedMessages: messages,
+        myName: myName,
+        names: names,
+      });
       console.log(
         "Imported file with ",
         messages.length,
         "messages for user ",
-        myName
+        myName,
+        "with names",
+        names
       );
     },
 
