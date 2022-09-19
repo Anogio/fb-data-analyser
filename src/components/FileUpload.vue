@@ -69,12 +69,18 @@ export default defineComponent({
         filenameEncoding: "utf-8",
       });
 
-      const profileFile = zipContent.filter((f) =>
+      const profileFiles = zipContent.filter((f) =>
         f.filename.endsWith("profile_information.json")
-      )[0];
-      const myProfile = await profileFile.getData(new zip.TextWriter());
-      const myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
-        .full_name;
+      );
+      let myName;
+      if (profileFiles.length > 0) {
+        const profileFile = profileFiles[0];
+        const myProfile = await profileFile.getData(new zip.TextWriter());
+        myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
+          .full_name;
+      } else {
+        myName = "me";
+      }
 
       const conversationFiles = zipContent.filter(
         (f) =>
