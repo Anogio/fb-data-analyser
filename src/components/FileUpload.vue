@@ -46,6 +46,9 @@
 import { defineComponent } from "vue";
 import * as zip from "@zip.js/zip.js";
 import * as iconv from "iconv-lite";
+import { mapStores } from "pinia";
+
+import useMainStore from "../store";
 
 export default defineComponent({
   name: "FileUpload",
@@ -127,11 +130,8 @@ export default defineComponent({
       }
 
       this.loading = false;
-      this.$emit("uploaded", {
-        sortedMessages: messages,
-        myName: myName,
-        names: names,
-      });
+      this.mainStore.setSortedMessages(messages);
+      this.mainStore.setMyName(myName);
       console.log(
         "Imported file with ",
         messages.length,
@@ -154,6 +154,7 @@ export default defineComponent({
       );
     },
   },
+  computed: mapStores(useMainStore),
 });
 </script>
 
