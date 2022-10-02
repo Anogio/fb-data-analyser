@@ -69,12 +69,16 @@ export default defineComponent({
         filenameEncoding: "utf-8",
       });
 
-      const profileFile = zipContent.filter((f) =>
+      const profileFiles = zipContent.filter((f) =>
         f.filename.endsWith("profile_information.json")
-      )[0];
-      const myProfile = await profileFile.getData(new zip.TextWriter());
-      const myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
-        .full_name;
+      );
+      let myName = null;
+      if (profileFiles.length > 0) {
+        const profileFile = profileFiles[0];
+        const myProfile = await profileFile.getData(new zip.TextWriter());
+        myName = JSON.parse(this.fixEncoding(myProfile)).profile_v2.name
+          .full_name;
+      }
 
       const conversationFiles = zipContent.filter(
         (f) =>
@@ -111,13 +115,30 @@ export default defineComponent({
       );
       messages = messages.flat();
       messages.sort((m1, m2) => m1.timestamp - m2.timestamp);
+
+      let names = null;
+      if (myName === null) {
+        names = new Map();
+        messages.forEach((m) =>
+          names.set(m.sender, (names.get(m.sender) || 0) + 1)
+        );
+        names = Array.from(names.entries()).sort((a, b) => b[1] - a[1]);
+        names = names.map((e) => e[0]);
+      }
+
       this.loading = false;
-      this.$emit("uploaded", { sortedMessages: messages, myName: myName });
+      this.$emit("uploaded", {
+        sortedMessages: messages,
+        myName: myName,
+        names: names,
+      });
       console.log(
         "Imported file with ",
         messages.length,
         "messages for user ",
-        myName
+        myName,
+        "with names",
+        names
       );
     },
 
