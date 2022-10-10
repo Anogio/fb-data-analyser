@@ -258,8 +258,8 @@ export default defineComponent({
     },
     conversationDMIds() {
       return this.conversationsSummary
-        .filter((c) => c.summary.conversationType === "RegularGroup")
-        .map((c) => c.conversation.conversationId);
+        .filter((c) => c.summary.conversationType === "Regular")
+        .map((c) => c.summary.conversationId);
     },
   },
 });
