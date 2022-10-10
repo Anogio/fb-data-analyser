@@ -42,7 +42,7 @@ export default defineComponent({
       this.names = event.names;
     },
     setName() {
-      this.myName = this.selectedName;
+      this.mainStore.myName = this.selectedName;
     },
   },
   computed: mapStores(useMainStore),
