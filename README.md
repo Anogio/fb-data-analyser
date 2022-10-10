@@ -15,7 +15,9 @@ There is a file in the `examples` folder with minimal data and a few conversatio
 - Full text search tab to search in all conversations
 - Provide SQLite advanced tab to make custom queries and graphs
 - Add detailed conversation view (for a group chat or DM) -> show a time graph of messages sent/received over time, show who sent how many messages. Have a selector for the conversation, and optionally link to it when clicking on the general graph
-- Include reacts in the detailed view ?
+- Include reacts in the detailed view
+- Stats on reacts (it's important to know who actually likes you)
+- Include images in the detailed view
 - Improve visuals (especially graph sizing, color and reactivity)
 - Integrate other chat extracts (starting with Whatsapp)
 
