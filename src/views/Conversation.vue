@@ -1,17 +1,22 @@
 <template>
   <div>Conversation {{ $route.params.id }}</div>
-  <!-- TODO this key is bad -->
   <div
-    v-for="message in convMessages"
-    :key="message.idx"
+    v-for="(message, index) in convMessages"
+    :key="index"
     class="message"
-    :class="message.mine ? 'mine' : 'other'"
+    :class="{ mine: message.mine }"
   >
     <div class="sender">
       {{ message.sender }} ({{ new Date(message.timestamp).toISOString() }})
     </div>
     <div class="contents">
       {{ message.text }}
+    </div>
+    <div class="reacts">
+      <span v-for="(reaction, index) in message.reactions" :key="index">
+        <span v-if="index !== 0">, </span>
+        {{ reaction.reaction }} {{ reaction.actor }}
+      </span>
     </div>
   </div>
 </template>
@@ -28,6 +33,10 @@
 
 .mine {
   text-align: right;
+}
+
+.reacts {
+  font-size: 80%;
 }
 </style>
 
@@ -47,7 +56,7 @@ export default defineComponent({
       return this.mainStore.sortedMessages
         .filter((m) => m.conversationId === this.$route.params.id)
         .map((m, idx) => {
-          return { ...m, idx: idx, mine: m.sender === this.mainStore.myName };
+          return { ...m, mine: m.sender === this.mainStore.myName };
         });
     },
   },

@@ -110,6 +110,8 @@ export default defineComponent({
               sender: message.sender_name,
               timestamp: message.timestamp_ms,
               text: message.content,
+              photos: message.photos || [],
+              reactions: message.reactions || [],
             };
           });
           this.processedConversations += 1;

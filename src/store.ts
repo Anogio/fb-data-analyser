@@ -1,5 +1,15 @@
 import { defineStore } from "pinia";
 
+interface Photo {
+  uri: string;
+  creation_timetamp: number;
+}
+
+interface Reaction {
+  reaction: string;
+  actor: string;
+}
+
 interface Message {
   conversationName: string;
   conversationId: string;
@@ -7,6 +17,8 @@ interface Message {
   sender: string;
   timestamp: number;
   text: string;
+  photos: Photo[];
+  reactions: Reaction[];
 }
 
 interface StoreState {
