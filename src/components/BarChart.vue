@@ -101,7 +101,6 @@ export default {
           },
         },
         onClick: (_event, clickedElements) => {
-          console.log(this.conversationIds);
           if (this.conversationIds && clickedElements.length > 0) {
             const convId = this.conversationIds[clickedElements[0].index];
             this.$router.push(`/conversation/${convId}`);
