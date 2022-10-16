@@ -224,7 +224,7 @@ export default defineComponent({
         datasets: [
           {
             data: data.map((c) => c.summary.total),
-            label: "Exchanged messages (log scale)",
+            label: "Exchanged messages",
             backgroundColor: "lightGreen",
             barThickness: 20,
           },
@@ -240,7 +240,7 @@ export default defineComponent({
         datasets: [
           {
             data: data.map((c) => c.summary.total),
-            label: "Exchanged messages (log scale)",
+            label: "Exchanged messages",
             backgroundColor: "lightGreen",
             barThickness: 20,
           },

@@ -18,9 +18,10 @@
       >these instructions</a
     >. It may take a few days to generate.
     <br />
-    NB: Facebook might propose multiple files for download. It's unclear to me
-    why this is, just pick the largest one.
-    <br /><br />
+    NB: Facebook might propose multiple files for download. Only one of them will have messages in it,
+    the rest are overflow files that will mostly contain files that were too big to fit in the archive.
+    However, it's unclear how you can tell which one is the right file, you'll have to try them one by one.
+    <br />
     <div v-if="!loading">
       <input
         type="file"
