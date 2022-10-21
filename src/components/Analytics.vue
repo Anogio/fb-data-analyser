@@ -77,6 +77,7 @@
         v-if="conversationCountDMChartData"
         :chartData="conversationCountDMChartData"
         :logScale="logScale"
+        :conversationIds="conversationDMIds"
         title="Exchanged messages - direct messaging"
         class="count-by-conv-chart"
       />
@@ -84,6 +85,7 @@
         v-if="conversationCountGroupChartData"
         :chartData="conversationCountGroupChartData"
         :logScale="logScale"
+        :conversationIds="conversationGroupIds"
         title="Exchanged messages - group chats"
         class="count-by-conv-chart"
       />
@@ -201,8 +203,10 @@ export default defineComponent({
             sentMessages: myMessages.length,
             receivedMessages: group.length - myMessages.length,
             conversationType: group[0].conversationType,
+            conversationId: group[0].conversationId,
           };
         },
+        // TODO might be better to do this by conv ID to avoid name collisions?
         (m) => m.conversationName
       );
 
@@ -231,6 +235,11 @@ export default defineComponent({
         ],
       };
     },
+    conversationGroupIds() {
+      return this.conversationsSummary
+        .filter((c) => c.summary.conversationType === "RegularGroup")
+        .map((c) => c.summary.conversationId);
+    },
     conversationCountDMChartData() {
       const data = this.conversationsSummary.filter(
         (c) => c.summary.conversationType === "Regular"
@@ -246,6 +255,11 @@ export default defineComponent({
           },
         ],
       };
+    },
+    conversationDMIds() {
+      return this.conversationsSummary
+        .filter((c) => c.summary.conversationType === "Regular")
+        .map((c) => c.summary.conversationId);
     },
   },
 });

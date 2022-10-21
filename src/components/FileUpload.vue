@@ -47,6 +47,9 @@
 import { defineComponent } from "vue";
 import * as zip from "@zip.js/zip.js";
 import * as iconv from "iconv-lite";
+import { mapStores } from "pinia";
+
+import { useMainStore } from "../store";
 
 export default defineComponent({
   name: "FileUpload",
@@ -108,6 +111,8 @@ export default defineComponent({
               sender: message.sender_name,
               timestamp: message.timestamp_ms,
               text: message.content,
+              photos: message.photos || [],
+              reactions: message.reactions || [],
             };
           });
           this.processedConversations += 1;
@@ -128,9 +133,9 @@ export default defineComponent({
       }
 
       this.loading = false;
+      this.mainStore.setSortedMessages(messages);
+      this.mainStore.setMyName(myName);
       this.$emit("uploaded", {
-        sortedMessages: messages,
-        myName: myName,
         names: names,
       });
       console.log(
@@ -155,6 +160,7 @@ export default defineComponent({
       );
     },
   },
+  computed: mapStores(useMainStore),
 });
 </script>
 

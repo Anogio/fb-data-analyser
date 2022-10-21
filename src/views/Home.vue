@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <analytics
-      v-if="sortedMessages !== null && myName !== null"
-      :sortedMessages="sortedMessages"
-      :my-name="myName"
+      v-if="mainStore.sortedMessages !== null && mainStore.myName !== null"
+      :sortedMessages="mainStore.sortedMessages"
+      :my-name="mainStore.myName"
     />
-    <div v-else-if="sortedMessages !== null">
+    <div v-else-if="mainStore.sortedMessages !== null">
       <span>Profile file not found, please select your name:</span>
       <select name="MyName" v-model="selectedName">
         <option v-for="name in names" :key="name" :value="name">
@@ -20,8 +20,10 @@
 
 <script>
 import { defineComponent } from "vue";
+import { mapStores } from "pinia";
 import FileUpload from "@/components/FileUpload.vue";
 import Analytics from "@/components/Analytics.vue";
+import { useMainStore } from "@/store";
 
 export default defineComponent({
   name: "Home",
@@ -31,21 +33,19 @@ export default defineComponent({
   },
   data() {
     return {
-      sortedMessages: null,
-      myName: null,
       selectedName: null,
       names: [],
     };
   },
   methods: {
     handleUploadFinished(event) {
-      this.sortedMessages = event.sortedMessages;
-      this.myName = event.myName;
       this.names = event.names;
+      this.selectedName = this.names[0];
     },
     setName() {
-      this.myName = this.selectedName;
-    }
+      this.mainStore.myName = this.selectedName;
+    },
   },
+  computed: mapStores(useMainStore),
 });
 </script>
