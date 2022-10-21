@@ -67,6 +67,7 @@ export default {
   },
   computed: {
     chartOptions() {
+      const truncateFun = this.getTruncatedLabel;
       return {
         animation: {
           duration: 0,
@@ -97,6 +98,9 @@ export default {
             display: true,
             ticks: {
               autoSkip: false,
+              callback: function (index) {
+                return truncateFun(index);
+              },
             },
           },
         },
@@ -107,6 +111,12 @@ export default {
           }
         },
       };
+    },
+  },
+  methods: {
+    getTruncatedLabel(index) {
+      const label = this.chartData.labels[index];
+      return label.length > 40 ? label.slice(0, 40) + "..." : label;
     },
   },
   watch: {

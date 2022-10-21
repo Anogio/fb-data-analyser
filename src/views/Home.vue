@@ -40,7 +40,9 @@ export default defineComponent({
   methods: {
     handleUploadFinished(event) {
       this.names = event.names;
-      this.selectedName = this.names[0];
+      if (this.names) {
+        this.selectedName = this.names[0];
+      }
     },
     setName() {
       this.mainStore.myName = this.selectedName;

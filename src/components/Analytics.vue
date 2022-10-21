@@ -1,9 +1,6 @@
 <template>
   <div>
     <h1>Data Analysis</h1>
-    <br />
-    Your name: <b>{{ myName }}</b> <br />
-    <br />
     <div>
       <div>
         <n-button @click="animation(true)" :disabled="!!animationInterval">{{

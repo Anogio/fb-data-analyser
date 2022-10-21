@@ -16,11 +16,15 @@
     You can get the file by following
     <a href="https://www.facebook.com/help/212802592074644" target="_blank"
       >these instructions</a
-    >. It may take a few days to generate.
+    >. It may take a few days to generate. Make sure to request a JSON format,
+    and to tick the Messenger and Profile info options when selecting the data
+    to receive.
     <br />
-    NB: Facebook might propose multiple files for download. Only one of them will have messages in it,
-    the rest are overflow files that will mostly contain files that were too big to fit in the archive.
-    However, it's unclear how you can tell which one is the right file, you'll have to try them one by one.
+    NB: Facebook might propose multiple files for download. Only one of them
+    will have messages in it, the rest are overflow files that will mostly
+    contain files that were too big to fit in the archive. However, it's unclear
+    how you can tell which one is the right file, you'll have to try them one by
+    one.
     <br />
     <div v-if="!loading">
       <input
