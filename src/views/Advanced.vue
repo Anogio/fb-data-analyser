@@ -10,7 +10,11 @@
       <br />
       <n-button @click="startLoad" type="info">Start load</n-button>
     </div>
-    <div v-else-if="loading">Loading... This can take a few minutes</div>
+    <div v-else-if="loading">
+      Loading... This can take a few minutes
+      <br />
+      {{ nRows }} / {{ mainStore.sortedMessages.length }}
+    </div>
     <div v-else>
       <n-input
         v-model:value="SQLQuery"
@@ -21,6 +25,9 @@
       <div v-if="result">
         Result:
         <json-viewer :value="result" />
+      </div>
+      <div v-else-if="error">
+        {{ error }}
       </div>
     </div>
   </div>
@@ -50,6 +57,7 @@ export default defineComponent({
       loading: false,
       SQLQuery: "",
       result: "",
+      error: null,
       db: null,
     };
   },
@@ -61,10 +69,12 @@ export default defineComponent({
       this.$router.push("/");
     },
     runQuery() {
+      this.result = null;
       try {
         this.result = this.db.exec(this.SQLQuery)[0];
       } catch (error) {
-        this.result = error;
+        this.error = error;
+        console.log(error);
       }
     },
     async startLoad() {
@@ -73,28 +83,28 @@ export default defineComponent({
       }
       this.loading = true;
       this.db.run(
-        "CREATE TABLE messages (conversationName TEXT, conversationType TEXT, " +
-          "sender TEXT, text TEXT, photos TEXT, reactions TEXT);"
+        "CREATE TABLE messages (conversationName TEXT, conversationId TEXT, conversationType TEXT," +
+          "timestampMs INTEGER, sender TEXT, text TEXT, photos TEXT, reactions TEXT);"
       );
-      this.$nextTick(() => {
-        this.mainStore.sortedMessages.forEach((msg) => {
-          let insertStmt = `INSERT INTO messages (conversationName, conversationType, sender, text, photos, reactions)
-                            VALUES (?, ?, ?, ?, ?, ?)`;
-          let binding = [
-            msg.conversationName,
-            msg.conversationType,
-            msg.sender,
-            msg.text ? msg.text : "",
-            JSON.stringify(msg.photos),
-            msg.reactions ? JSON.stringify(msg.reactions) : null,
-          ];
-          this.db.run(insertStmt, binding);
-          this.nRows += 1;
-          console.log(this.nRows);
-        });
-        this.loaded = true;
-        this.loading = false;
+      this.mainStore.sortedMessages.forEach((msg) => {
+        let insertStmt = `INSERT INTO messages (conversationName, conversationId, conversationType, timestampMs, sender, text, photos, reactions)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        let binding = [
+          msg.conversationName,
+          msg.conversationId,
+          msg.conversationType,
+          msg.timestamp,
+          msg.sender,
+          msg.text ? msg.text : "",
+          JSON.stringify(msg.photos),
+          msg.reactions ? JSON.stringify(msg.reactions) : null,
+        ];
+        this.db.run(insertStmt, binding);
+        this.nRows += 1;
+        console.log(this.nRows);
       });
+      this.loaded = true;
+      this.loading = false;
     },
   },
 });
