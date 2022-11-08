@@ -42,8 +42,7 @@
         />
       </div>
       <h3>
-        You can pick a time range to filter messages (by default, all messages
-        are shown):
+        Click a bar on the chart to go to the detailed view
       </h3>
       <n-date-picker
         v-model:value="range"

@@ -116,7 +116,7 @@ export default {
   methods: {
     getTruncatedLabel(index) {
       const label = this.chartData.labels[index];
-      return label.length > 40 ? label.slice(0, 40) + "..." : label;
+      return label.length > 40 ? label.slice(0, 35) + "..." : label;
     },
   },
   watch: {
