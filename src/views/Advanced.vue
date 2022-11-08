@@ -55,7 +55,7 @@ export default defineComponent({
       nRows: 0,
       loaded: false,
       loading: false,
-      SQLQuery: "",
+      SQLQuery: "SELECT * FROM messages LIMIT 1;",
       result: "",
       error: null,
       db: null,
