@@ -1,6 +1,8 @@
 <template>
   <div>
     <h1>Data Analysis</h1>
+    <router-link to="/advanced">Go to advanced messages query</router-link>
+    <br /><br />
     <div>
       <div>
         <n-button @click="animation(true)" :disabled="!!animationInterval">{{
@@ -41,9 +43,7 @@
           indicator-placement="inside"
         />
       </div>
-      <h3>
-        Click a bar on the chart to go to the detailed view
-      </h3>
+      <h3>Click a bar on the chart to go to the detailed view</h3>
       <n-date-picker
         v-model:value="range"
         type="daterange"

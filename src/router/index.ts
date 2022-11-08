@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import Advanced from "../views/Advanced.vue";
 import Conversation from "../views/Conversation.vue";
 
 const routes: Array<RouteRecordRaw> = [
@@ -12,6 +13,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/conversation/:id(.*)",
     name: "Conversation",
     component: Conversation,
+  },
+  {
+    path: "/advanced",
+    name: "Advanced",
+    component: Advanced,
   },
 ];
 

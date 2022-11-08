@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
+    "@types/node": "^18.11.9",
     "@zip.js/zip.js": "^2.5.25",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.0",
@@ -19,9 +20,11 @@
     "iconv-lite": "^0.6.3",
     "naive-ui": "^2.31.0",
     "pinia": "^2.0.22",
+    "sql.js": "^1.8.0",
     "vfonts": "^0.0.3",
     "vue": "^3.0.0",
     "vue-chartjs": "^4.1.1",
+    "vue-json-viewer": "3",
     "vue-router": "^4.0.0-0",
     "xicons": "^1.0.0"
   },
