@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
-    "@types/node": "^18.11.9",
     "@zip.js/zip.js": "^2.5.25",
     "chart.js": "^3.9.1",
     "chartjs-adapter-date-fns": "^2.0.0",

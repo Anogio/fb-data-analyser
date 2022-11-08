@@ -8,15 +8,13 @@
       Click this button to get started, it can take a few minutes depending on
       the volume of messages.
       <br />
-      NB: TODO => check that this works offline, as there seems to be some
-      WebAssembly downloads for sql.js !
-      <br />
       <n-button @click="startLoad" type="info">Start load</n-button>
     </div>
     <div v-else-if="loading">Loading... This can take a few minutes</div>
     <div v-else>
       <n-input
         v-model:value="SQLQuery"
+        v-on:keyup.enter="runQuery"
         placeholder="Type a SQLite query. Example: 'SELECT * FROM messages LIMIT 1;"
       />
       <n-button @click="runQuery">Run query</n-button>
@@ -33,6 +31,8 @@ import { defineComponent } from "vue";
 import initSqlJs from "sql.js";
 import { mapStores } from "pinia";
 import { useMainStore } from "@/store";
+// Required to let webpack 4 know it needs to copy the wasm file to our assets
+import sqlWasm from "!!file-loader?name=sql-wasm-[contenthash].wasm!sql.js/dist/sql-wasm.wasm";
 
 export default defineComponent({
   name: "Advanced",
@@ -40,9 +40,7 @@ export default defineComponent({
     if (!this.mainStore.sortedMessages) {
       this.goToHome();
     }
-    const SQL = await initSqlJs({
-      locateFile: (file) => `https://sql.js.org/dist/${file}`,
-    });
+    const SQL = await initSqlJs({ locateFile: () => sqlWasm });
     this.db = new SQL.Database();
   },
   data() {
@@ -70,28 +68,33 @@ export default defineComponent({
       }
     },
     async startLoad() {
+      if (this.loading) {
+        return;
+      }
       this.loading = true;
       this.db.run(
         "CREATE TABLE messages (conversationName TEXT, conversationType TEXT, " +
           "sender TEXT, text TEXT, photos TEXT, reactions TEXT);"
       );
-
-      this.mainStore.sortedMessages.forEach((msg) => {
-        let insertStmt = `INSERT INTO messages (conversationName, conversationType, sender, text, photos, reactions)
-                          VALUES (?, ?, ?, ?, ?, ?)`;
-        let binding = [
-          msg.conversationName,
-          msg.conversationType,
-          msg.sender,
-          msg.text ? msg.text : "",
-          JSON.stringify(msg.photos),
-          msg.reactions ? JSON.stringify(msg.reactions) : null,
-        ];
-        this.db.run(insertStmt, binding);
-        this.nRows += 1;
+      this.$nextTick(() => {
+        this.mainStore.sortedMessages.forEach((msg) => {
+          let insertStmt = `INSERT INTO messages (conversationName, conversationType, sender, text, photos, reactions)
+                            VALUES (?, ?, ?, ?, ?, ?)`;
+          let binding = [
+            msg.conversationName,
+            msg.conversationType,
+            msg.sender,
+            msg.text ? msg.text : "",
+            JSON.stringify(msg.photos),
+            msg.reactions ? JSON.stringify(msg.reactions) : null,
+          ];
+          this.db.run(insertStmt, binding);
+          this.nRows += 1;
+          console.log(this.nRows);
+        });
+        this.loaded = true;
+        this.loading = false;
       });
-      this.loaded = true;
-      this.loading = false;
     },
   },
 });
